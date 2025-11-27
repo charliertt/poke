@@ -23,17 +23,26 @@
 
 /* semantic color variables for this project */
 :root {
+  /* Duolingo-like palette */
+  --duo-green: #58cc02;
+  --duo-green-dark: #3fa700;
+  --duo-orange: #f6a623;
+  --duo-ink: #0b3a2f;
+
   --color-background: var(--vt-c-white);
-  --color-background-soft: var(--vt-c-white-soft);
-  --color-background-mute: var(--vt-c-white-mute);
+  --color-background-soft: #f7fbf6;
+  --color-background-mute: #f0f6ee;
 
-  --color-border: var(--vt-c-divider-light-2);
-  --color-border-hover: var(--vt-c-divider-light-1);
+  --color-border: rgba(11,58,47,0.08);
+  --color-border-hover: rgba(11,58,47,0.12);
 
-  --color-heading: var(--vt-c-text-light-1);
-  --color-text: var(--vt-c-text-light-1);
+  --color-heading: var(--duo-ink);
+  --color-text: rgba(11,58,47,0.9);
 
-  --section-gap: 160px;
+  --accent: var(--duo-green);
+  --accent-2: var(--duo-orange);
+
+  --section-gap: 140px;
 }
 
 @media (prefers-color-scheme: dark) {
