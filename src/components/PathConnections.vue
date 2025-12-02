@@ -75,22 +75,23 @@ const paths = computed<Path[]>(() => {
 
 .path-line {
   fill: none;
-  stroke-width: 5px;
-  stroke-dasharray: 10 5;
+  stroke-width: 6px;
+  stroke-dasharray: 0;
   transition: stroke 0.3s ease;
 }
 
 .path-line.state-locked {
-  stroke: #444;
+  stroke: rgba(74, 107, 140, 0.5);
+  stroke-dasharray: 8 10;
 }
 
 .path-line.state-active {
-  stroke: #ffa500;
-  stroke-dasharray: 0; 
+  stroke: #ffc857;
+  filter: drop-shadow(0 0 8px rgba(255, 200, 87, 0.6));
 }
 
 .path-line.state-completed {
   stroke: #1c4587;
-  stroke-dasharray: 0;
+  filter: drop-shadow(0 0 8px rgba(28, 69, 135, 0.45));
 }
 </style>
