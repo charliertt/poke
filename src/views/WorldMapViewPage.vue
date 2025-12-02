@@ -1,27 +1,25 @@
 <template>
   <div class="page-container">
-    <div class="map-background"></div>
+    <!-- <div class="map-background"></div> -->
+    <h1>Mapa de Progresión del Mundo</h1>
+    <p class="status-bar">
+      Bienvenido, Aventurero. {{ statusMessage }}
+    </p>
 
-    <div class="content-overlay">
-      <h1>Mapa de Progresión del Mundo</h1>
-      <p class="status-bar">
-        Bienvenido, Aventurero. {{ statusMessage }}
-      </p>
+    <WorldMapView />
 
-      <WorldMapView />
-    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue';
+import WorldMapView from '@/components/WorldMapView.vue';
+import { computed, onMounted, ref } from 'vue';
 import { useMapStore } from '../stores/mapStore';
-import WorldMapView from '../components/WorldMapView.vue';
 
 const mapStore = useMapStore();
 
 const totalZones = computed(() => mapStore.allZones.length);
-const completedZones = computed(() => 
+const completedZones = computed(() =>
   mapStore.allZones.filter(z => z.state === 'completed').length
 );
 
@@ -35,22 +33,13 @@ onMounted(async () => {
 
 <style scoped>
 .page-container {
-  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
   height: 100vh;
   overflow: hidden;
-}
-
-/* Fondo del mapa */
-.map-background {
-  position: absolute;
-  inset: 0;
-  background-image: url('@/assets/world-map.png'); /* ← cambia ruta */
-  background-size: cover;     /* hace que NO se deforme */
-  background-position: center;
-  background-repeat: no-repeat;
-  z-index: 1; /* detrás de todo */
-  filter: brightness(1.1); /* opcional */
+  background-color: #22405c;
 }
 
 /* Contenido encima del mapa */
@@ -67,7 +56,7 @@ onMounted(async () => {
 }
 
 h1 {
-  color: #a7ff83;
+  color: #fff;
 }
 
 .status-bar {
@@ -77,5 +66,6 @@ h1 {
   border-radius: 6px;
   font-style: italic;
   backdrop-filter: blur(3px);
+  color: #fff;
 }
 </style>

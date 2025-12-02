@@ -1,54 +1,54 @@
 // src/stores/mapStore.ts
 
 import { defineStore } from 'pinia';
-import { ref, computed } from 'vue';
-import type { Zone } from '../types/zone'; 
+import { computed, ref } from 'vue';
+import type { Zone } from '../types/zone';
 
-// --- Datos Mockup de Zonas ---
+// --- Datos de Zonas de Cali ---
 const initialZones: Zone[] = [
     {
         id: 1,
-        name: 'Cima Ventosa',
-        description: 'Desde lo alto se observa todo el viaje. ¡Buen comienzo!',
-        position: { x: 600, y: 180 },
+        name: 'Zoológico de Cali',
+        description: '¡Explora la fauna y descubre Pokémon salvajes en este increíble zoológico!',
+        position: { x: 250, y: 620 },
         state: 'completed',
         progress: 100,
         nextZoneId: 2,
     },
     {
         id: 2,
-        name: 'Bosque de Inicio',
-        description: 'La primera zona. Aprende los fundamentos.',
-        position: { x: 310, y: 440 },
+        name: 'Plazoleta Jairo Varela',
+        description: 'El corazón de la salsa caleña. ¡Ritmo y aventura te esperan!',
+        position: { x: 830, y: 420 },
         state: 'active',
         progress: 35,
         nextZoneId: 3,
     },
     {
         id: 3,
-        name: 'Pradera Central',
-        description: 'Encuentros amistosos y el profesor aguardando tu llegada.',
-        position: { x: 600, y: 520 },
+        name: 'Zoológico de Cali (Sur)',
+        description: 'Otra área del zoológico con desafíos más avanzados.',
+        position: { x: 380, y: 1100 },
         state: 'locked',
-        requirements: 'Completar "Bosque de Inicio"',
+        requirements: 'Completar "Plazoleta Jairo Varela"',
         nextZoneId: 4,
     },
     {
         id: 4,
-        name: 'Cuevas Florecientes',
-        description: 'Rocas, hongos brillantes y rutas inesperadas.',
-        position: { x: 890, y: 470 },
-        state: 'locked',
-        requirements: 'Al menos 50% de Pradera Central',
+        name: 'Cristo Rey',
+        description: '¡Desafía al Líder José en el Gimnasio Cristo Rey! El mirador más icónico de Cali te espera.',
+        position: { x: 930, y: 1050 },
+        state: 'active',
+        progress: 0,
         nextZoneId: 5,
     },
     {
         id: 5,
-        name: 'Cascada del Arcoíris',
-        description: 'La caída de agua marca la entrada al reto final.',
-        position: { x: 600, y: 830 },
+        name: 'Parque de la Caña',
+        description: 'El destino final. Demuestra todo lo que has aprendido.',
+        position: { x: 600, y: 1450 },
         state: 'locked',
-        requirements: 'Completar "Cuevas Florecientes"',
+        requirements: 'Completar "Cristo de Caña"',
     },
 ];
 
@@ -98,7 +98,7 @@ export const useMapStore = defineStore('map', () => {
                 }
             }
         }
-        
+
         // 3. Limpiar la selección
         setSelectedZone(null);
         console.log(`Zona ${zoneId} completada. ¡Progreso guardado!`);
