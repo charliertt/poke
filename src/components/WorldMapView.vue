@@ -1,6 +1,6 @@
 <template>
   <div class="world-map-view">
-    <div class="map-canvas">
+    <div class="map-canvas" :style="{ backgroundImage: `url(${mapArt})` }">
       <PathConnections :zones="mapStore.allZones" :width="MAP_WIDTH" :height="MAP_HEIGHT" />
 
       <ZoneNode
@@ -26,10 +26,11 @@ import { useMapStore } from '../stores/mapStore';
 import ZoneNode from './ZoneNode.vue';
 import ZonePopover from './ZonePopover.vue';
 import PathConnections from './PathConnections.vue';
+import mapArt from '../assets/cali-journey-map.svg';
 
 const mapStore = useMapStore();
 
-const MAP_WIDTH = 800;
+const MAP_WIDTH = 1200;
 const MAP_HEIGHT = 1200;
 
 const handleEnterZone = (zoneId: number) => {
@@ -51,14 +52,18 @@ const handleEnterZone = (zoneId: number) => {
   height: 100vh;
   overflow-y: auto;
   position: relative;
-  background-color: #2c3e50;
+  background: radial-gradient(circle at 50% 20%, #dff4ff 0%, #a5d6ff 70%, #7fb7ff 100%);
   padding: 20px 0 40px;
 }
 
 .map-canvas {
   position: relative;
-  width: min(900px, 95vw);
-  aspect-ratio: 2 / 3;
+  width: min(960px, 95vw);
+  aspect-ratio: 1 / 1;
   margin: 0 auto 30px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.1));
 }
 </style>
