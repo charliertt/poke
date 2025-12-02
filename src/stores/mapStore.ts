@@ -104,6 +104,37 @@ export const useMapStore = defineStore('map', () => {
         console.log(`Zona ${zoneId} completada. ¡Progreso guardado!`);
     }
 
+    /**
+     * Desbloquea la siguiente zona al entrar a una zona.
+     * @param currentZoneId ID de la zona actual
+     * @returns Información de la zona desbloqueada o null si no hay siguiente
+     */
+    function unlockNextZone(currentZoneId: number): Zone | null {
+        const currentZone = zones.value.find(z => z.id === currentZoneId);
+        if (!currentZone || !currentZone.nextZoneId) return null;
+
+        const nextZone = zones.value.find(z => z.id === currentZone.nextZoneId);
+        if (!nextZone) return null;
+
+        // Solo desbloquear si está locked
+        if (nextZone.state === 'locked') {
+            nextZone.state = 'active';
+            nextZone.progress = 0;
+            delete nextZone.requirements;
+            console.log(`Zona "${nextZone.name}" desbloqueada.`);
+            return nextZone;
+        }
+
+        return null;
+    }
+
+    /**
+     * Obtiene una zona por su ID
+     */
+    function getZoneById(zoneId: number): Zone | null {
+        return zones.value.find(z => z.id === zoneId) || null;
+    }
+
     return {
         // State & Getters
         allZones,
@@ -111,5 +142,7 @@ export const useMapStore = defineStore('map', () => {
         // Actions
         setSelectedZone,
         completeZone,
+        unlockNextZone,
+        getZoneById,
     };
 });
