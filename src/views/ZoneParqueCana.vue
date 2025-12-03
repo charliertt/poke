@@ -110,24 +110,25 @@
       </div>
 
     </div>
-    
+
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed, nextTick } from 'vue';
-import { useRoute, useRouter, RouterLink } from 'vue-router';
+import { computed, onMounted, ref } from 'vue';
+import { RouterLink, useRouter } from 'vue-router';
 import { useMapStore } from '../stores/mapStore';
-import type { Zone, SubZoneNode } from '../types/zone';
+import type { SubZoneNode, Zone } from '../types/zone';
 
-const route = useRoute();
 const router = useRouter();
 const mapStore = useMapStore();
+
+// ID fijo para esta zona específica
+const ZONE_ID = 5;
 
 const zone = ref<Zone | null>(null);
 const subZoneNodes = ref<SubZoneNode[]>([]);
 const selectedNode = ref<SubZoneNode | null>(null);
-const currentZoneId = computed(() => route.params.id ? Number(route.params.id) : null);
 
 // --- Lógica de Carga y Nodos ---
 const loadZoneData = (id: number) => {
@@ -159,14 +160,14 @@ const startMission = () => {
     const valve101 = subZoneNodes.value.find(n => n.id === 'valve_101');
     const nextValve = subZoneNodes.value.find(n => n.id === valve101?.nextId);
 
-    if(valve101 && nextValve && currentZoneId.value) {
+    if(valve101 && nextValve) {
         valve101.state = 'completed';
-        mapStore.updateSubZoneNodeState(currentZoneId.value, valve101.id, 'completed');
+        mapStore.updateSubZoneNodeState(ZONE_ID, valve101.id, 'completed');
 
         nextValve.state = 'active';
-        mapStore.updateSubZoneNodeState(currentZoneId.value, nextValve.id, 'active');
+        mapStore.updateSubZoneNodeState(ZONE_ID, nextValve.id, 'active');
 
-        loadZoneData(currentZoneId.value);
+        loadZoneData(ZONE_ID);
         alert('Misión aceptada. ¡La Válvula de Filtración Sur está ahora disponible! Vence al entrenador.');
         selectedNode.value = null;
     }
@@ -174,24 +175,21 @@ const startMission = () => {
 
 // Acción: Completar una válvula o la zona de captura
 const completeNode = (nodeId: string) => {
-    const nodeIndex = subZoneNodes.value.findIndex(n => n.id === nodeId);
-    const node = subZoneNodes.value[nodeIndex];
+    const node = subZoneNodes.value.find(n => n.id === nodeId);
 
-    if (nodeIndex === -1 || node.state !== 'active') return;
+    if (!node || node.state !== 'active') return;
 
     // 1. Marcar el nodo actual como completado
     node.state = 'completed';
-    if(currentZoneId.value) {
-        mapStore.updateSubZoneNodeState(currentZoneId.value, node.id, 'completed');
-    }
+    mapStore.updateSubZoneNodeState(ZONE_ID, node.id, 'completed');
 
     // 2. Activar el siguiente nodo de la cadena
     const nextId = node.nextId;
     if (nextId) {
         const nextNode = subZoneNodes.value.find(n => n.id === nextId);
-        if (nextNode && currentZoneId.value) {
-             nextNode.state = 'active';
-             mapStore.updateSubZoneNodeState(currentZoneId.value, nextNode.id, 'active');
+        if (nextNode) {
+            nextNode.state = 'active';
+            mapStore.updateSubZoneNodeState(ZONE_ID, nextNode.id, 'active');
         }
     }
 
@@ -203,9 +201,7 @@ const completeNode = (nodeId: string) => {
         alert(`¡Válvula ${node.name} abierta!`);
     }
 
-    if (currentZoneId.value) {
-      loadZoneData(currentZoneId.value);
-    }
+    loadZoneData(ZONE_ID);
 };
 
 // Cálculo de las líneas de conexión
@@ -238,19 +234,15 @@ const missionPaths = computed<Path[]>(() => {
 });
 
 
-watch(() => route.params.id, (newId) => {
-  if (newId) {
-    const idToLoad = Array.isArray(newId) ? Number(newId[0]) : Number(newId);
-    loadZoneData(idToLoad);
-  }
-}, { immediate: true });
+// Cargar datos al montar el componente
+onMounted(() => {
+  loadZoneData(ZONE_ID);
+});
 
 
 const startBattle = () => {
     alert(`¡Misión cumplida! Entrando a la batalla final contra el Líder Manuel.`);
-    if(currentZoneId.value) {
-        mapStore.completeZone(currentZoneId.value);
-    }
+    mapStore.completeZone(ZONE_ID);
     router.push('/mapa');
 };
 </script>
